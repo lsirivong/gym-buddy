@@ -1,22 +1,54 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
-import logo from '../logo.svg';
+import { connect } from 'react-redux';
+import LoginForm from '../components/LoginForm';
 import './index.css';
-import Routine from '../Components/Routine';
+import * as api from '../services/api';
+import Routine from '../components/Routine';
 
 class App extends Component {
+  componentDidMount() {
+    this.props.initialize();
+  }
+
   render() {
+    const { currentUser } = this.props;
+
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React!</h2>
+          <h2>Gym Buddy</h2>
         </div>
         <section>
-          <Routine />
+          {
+            currentUser
+              ? <Routine />
+              : <LoginForm />
+          }
         </section>
       </div>
     );
   }
 }
 
-export default App;
+
+const mapStateToProps = state => {
+  return {
+    currentUser: _.get(state, ['currentUser', 'data'])
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    initialize: () => {
+      api.boot(dispatch);
+    }
+  }
+}
+
+const ConnectedApp = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
+
+export default ConnectedApp;
