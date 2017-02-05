@@ -2,9 +2,9 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import LoginForm from '../components/LoginForm';
+import Routine from '../components/Routine';
 import './index.css';
 import * as api from '../services/api';
-import Routine from '../components/Routine';
 
 class App extends Component {
   componentDidMount() {
