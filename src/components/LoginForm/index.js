@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import './index.css';
 
 class LoginForm extends Component {
@@ -50,16 +49,4 @@ class LoginForm extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    logIn: (email, password) => {
-      dispatch({
-        type: 'LOGIN_REQUESTED',
-        payload: { email, password }
-      })
-      console.log(`Logging in ${email}:${password}`)
-    }
-  }
-}
-
-export default connect(null, mapDispatchToProps)(LoginForm);
+export default LoginForm

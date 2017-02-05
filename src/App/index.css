@@ -1,11 +1,10 @@
-.App {
-  text-align: center;
-}
+.App {}
 
 .App-header {
   background-color: #222;
   padding: 20px;
   color: white;
+  text-align: center;
 }
 
 .App-intro {
