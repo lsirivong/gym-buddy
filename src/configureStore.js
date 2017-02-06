@@ -3,12 +3,20 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import userSagas from './sagas/user'
 import reducer from './reducers'
+import exercises from './data/exercises.json';
+import routines from './data/routines.json';
 
 const sagaMiddleware = createSagaMiddleware()
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+const initialState = {
+  exercises: exercises.exercises,
+  routines: routines.routines
+}
 
 const store = createStore(
   reducer,
+  initialState,
   composeEnhancers(
     applyMiddleware(sagaMiddleware)
   )
@@ -16,5 +24,5 @@ const store = createStore(
 
 sagaMiddleware.run(userSagas)
 
-export default store;
+export default store
 

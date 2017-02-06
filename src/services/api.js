@@ -1,3 +1,5 @@
+import routines from '../data/routines.json';
+
 const { firebase } = window;
 
 export function boot(dispatch) {
@@ -23,3 +25,8 @@ export function boot(dispatch) {
 export function login(email, password) {
   return firebase.auth().signInWithEmailAndPassword(email, password);
 }
+
+export function requestRoutines() {
+  return routines;
+}
+

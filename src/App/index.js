@@ -1,54 +1,39 @@
-import _ from 'lodash';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import LoginForm from '../components/LoginForm';
-import Routine from '../components/Routine';
-import './index.css';
-import * as api from '../services/api';
+import _ from 'lodash'
+import React, { Component } from 'react'
+import LoginForm from '../components/LoginForm'
+import Routines from '../containers/Routines'
+import AppBar from 'material-ui/AppBar'
+import './index.css'
 
 class App extends Component {
+  static defaultProps = {
+    initialize: _.noop
+  }
+
   componentDidMount() {
-    this.props.initialize();
+    this.props.initialize()
   }
 
   render() {
-    const { currentUser } = this.props;
+    const { currentUser } = this.props
 
     return (
       <div className="App">
-        <div className="App-header">
-          <h2>Gym Buddy</h2>
-        </div>
+        <AppBar
+          title="Gym Buddy"
+          showMenuIconButton={false}
+          zDepth={0}
+        />
         <section>
           {
             currentUser
-              ? <Routine />
+              ? <Routines routines={[0, 1]} />
               : <LoginForm />
           }
         </section>
       </div>
-    );
+    )
   }
 }
 
-
-const mapStateToProps = state => {
-  return {
-    currentUser: _.get(state, ['currentUser', 'data'])
-  }
-}
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    initialize: () => {
-      api.boot(dispatch);
-    }
-  }
-}
-
-const ConnectedApp = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App);
-
-export default ConnectedApp;
+export default App

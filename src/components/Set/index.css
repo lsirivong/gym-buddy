@@ -1,0 +1,31 @@
+.Set {
+  display: flex;
+  align-items: center;
+}
+.Set--weight {
+  font-size: 1.42857em;
+  font-weight: 600;
+  flex-basis: 2.5em;
+}
+.Set--plates {
+  display: flex;
+  flex-grow: 1;
+  margin-left: 16px;
+}
+.Set--plate {
+  margin-right: 8px !important;
+}
+.Set--plate--value {
+  font-weight: 600;
+}
+.Set--reps {
+  flex-basis: 40px;
+  margin-left: 16px;
+}
+.Set--reps input {
+  text-align: center !important;
+}
+.Set--complete {
+  flex-basis: 0;
+  margin-left: 16px;
+}
