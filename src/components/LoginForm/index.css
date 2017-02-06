@@ -1,5 +1,7 @@
 .LoginForm {
   text-align: left;
+  max-width: 300px;
+  margin: 24px auto;
 }
 
 label {

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import LoginForm from '../../componentns/LoginForm'
+import LoginForm from '../../components/LoginForm'
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
@@ -8,7 +8,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'LOGIN_REQUESTED',
         payload: { email, password }
       })
-      console.log(`Logging in ${email}:${password}`)
     }
   }
 }
