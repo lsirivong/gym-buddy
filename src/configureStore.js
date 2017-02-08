@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import userSagas from './sagas/user'
+import exerciseSagas from './sagas/exercise'
 import reducer from './reducers'
 import exercises from './data/exercises.json';
 import routines from './data/routines.json';
@@ -23,6 +24,7 @@ const store = createStore(
 )
 
 sagaMiddleware.run(userSagas)
+sagaMiddleware.run(exerciseSagas)
 
 export default store
 

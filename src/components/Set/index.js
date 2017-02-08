@@ -1,4 +1,5 @@
-import React from 'react'
+import _ from 'lodash'
+import React, { Component } from 'react'
 import TextField from 'material-ui/TextField'
 import Checkbox from 'material-ui/Checkbox'
 import Chip from 'material-ui/Chip'
@@ -22,17 +23,6 @@ const plateColors = [
   blueGrey500,
   blueGrey400,
 ]
-
-function findWeight(multiplier = 1, weight)  {
-  return roundDown(multiplier * weight)
-}
-
-function roundDown(num, stepSize = 5, barWeight = 45) {
-  return Math.max(
-    barWeight,
-    num - (num % stepSize)
-  )
-}
 
 function calculateBarbellWeights(weight, barWeight = 45) {
   let remainingWeight = (weight - barWeight) / 2;
@@ -59,52 +49,55 @@ function calculateBarbellWeights(weight, barWeight = 45) {
 }
 
 
-const Set = ({ set, weight }) => {
-  const { reps, multiplier } = set
-  const setWeight = findWeight(multiplier, weight)
-  return <div className="Set">
-    <div
-      className="Set--weight"
-    >
-        {setWeight}
+class Set extends Component {
+  render() {
+    const { reps, weight, onRepChange = _.noop } = this.props
+
+    return <div className="Set">
+      <div
+        className="Set--weight"
+      >
+        {weight}
+      </div>
+      <div
+        className="Set--plates"
+      >
+        {
+          calculateBarbellWeights(weight).map(plate => (
+            <Chip
+              className="Set--plate"
+              key={`${weight}_${plate.weight}`}
+              backgroundColor={plate.color}
+              labelColor={white}
+            >
+              <div className="Set--plate--value">
+                {plate.count > 1 && `${plate.count} x`} {plate.weight}
+              </div>
+            </Chip>
+          ))
+        }
+      </div>
+      <div
+        className="Set--reps"
+      >
+        <TextField
+          name="set_reps"
+          value={reps}
+          fullWidth={true}
+          onChange={onRepChange}
+        />
+      </div>
+      <div
+        className="Set--complete"
+      >
+        <Checkbox
+          iconStyle={{
+            marginRight: 0,
+          }}
+        />
+      </div>
     </div>
-    <div
-      className="Set--plates"
-    >
-      {
-        calculateBarbellWeights(setWeight).map(plate => (
-          <Chip
-            className="Set--plate"
-            key={`${setWeight}_${plate.weight}`}
-            backgroundColor={plate.color}
-            labelColor={white}
-          >
-            <div className="Set--plate--value">
-              {plate.count > 1 && `${plate.count} x`} {plate.weight}
-            </div>
-          </Chip>
-        ))
-      }
-    </div>
-    <div
-      className="Set--reps"
-    >
-      <TextField
-        name="set_reps"
-        value={reps}
-        fullWidth={true}
-      />
-    </div>
-    <div
-      className="Set--complete"
-    >
-      <Checkbox
-        iconStyle={{
-          marginRight: 0,
-        }}
-      />
-    </div>
-  </div>
+  }
 }
 
 export default Set

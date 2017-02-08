@@ -1,8 +1,10 @@
 import _ from 'lodash'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Card, CardHeader, CardText } from 'material-ui/Card'
 import Slider from 'material-ui/Slider'
 import TextField from 'material-ui/TextField'
+import RaisedButton from 'material-ui/RaisedButton'
 import Set from '../Set'
 import './index.css'
 
@@ -17,7 +19,18 @@ const computeMinMax = value => ({
   max: value + MAX_WEIGHT_DIFF
 })
 
-class Exercise extends Component {
+function roundDown(num, stepSize = 5, barWeight = 45) {
+  return Math.max(
+    barWeight,
+    num - (num % stepSize)
+  )
+}
+
+function findWeight(multiplier = 1, weight)  {
+  return roundDown(multiplier * weight)
+}
+
+export class Exercise extends Component {
   constructor(props) {
     super(props)
     const { min, max } = computeMinMax(INITIAL_WEIGHT)
@@ -26,6 +39,7 @@ class Exercise extends Component {
       textWeight: INITIAL_WEIGHT,
       min,
       max,
+      reps: {}
     }
   }
 
@@ -67,6 +81,16 @@ class Exercise extends Component {
     })
   }
 
+  handleRepChange = (i, { target }) => {
+    const { value } = target
+    this.setState(state => ({
+      reps: {
+        ...state.reps,
+        [i]: parseInt(value, 10) || 0,
+      }
+    }))
+  }
+
   handleWeightChange = (e, value) => {
     this.setWeight(value)
   }
@@ -74,6 +98,34 @@ class Exercise extends Component {
   handleTextWeightBlur = ({ target }) => {
     const { value } = target
     this.setWeight(value, true)
+  }
+
+  handleSaveClick = () => {
+    // compose persistence data
+    const { exercise } = this.props
+    const { id, steps } = exercise
+    const { reps: overrideReps, weight } = this.state
+    const suggestedReps = steps.reduce((acc, { multiplier, reps }, i) => (
+      acc.concat({
+        reps,
+        weight: findWeight(multiplier, weight)
+      })
+    ), [])
+
+    const reps = suggestedReps.map((set, i) => (
+      {
+        ...set,
+        reps: _.get(overrideReps, i, set.reps)
+      }
+    ))
+
+    const data = {
+      timestamp: Date.now(),
+      exerciseId: id,
+      reps,
+    }
+
+    this.props.saveWorkout(data)
   }
 
   render() {
@@ -106,11 +158,12 @@ class Exercise extends Component {
             paddingBottom: 8
           }}
         >
-          {exercise.steps.map((set, i) => (
+          {exercise.steps.map(({ reps, multiplier }, i) => (
             <Set
               key={i}
-              set={set}
-              weight={weight}
+              reps={_.get(this.state.reps, i, reps)}
+              weight={findWeight(multiplier, weight)}
+              onRepChange={this.handleRepChange.bind(this, i)}
               onChange={this.handleWeightChange}
             />
           ))}
@@ -142,11 +195,26 @@ class Exercise extends Component {
               }}
             />
           </div>
+          <RaisedButton
+            label="Save"
+            onClick={this.handleSaveClick}
+          />
         </CardText>
       </Card>
     )
   }
 }
 
-export default Exercise
 
+const mapDispatchToProps = (dispatch, props) => {
+  return {
+    saveWorkout: payload => {
+      return dispatch({
+        type: 'POST_EXERCISE_REQUEST',
+        payload,
+      })
+    }
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Exercise)

@@ -11,22 +11,26 @@ export function boot(dispatch) {
     storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
     messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
   };
-  firebase.initializeApp(config);
+  firebase.initializeApp(config)
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       dispatch({
         type: 'INITIALIZE_USER',
-        user: user
-      });
+        user: user,
+      })
     }
-  });
+  })
 }
 
 export function login(email, password) {
-  return firebase.auth().signInWithEmailAndPassword(email, password);
+  return firebase.auth().signInWithEmailAndPassword(email, password)
 }
 
 export function requestRoutines() {
-  return routines;
+  return routines
+}
+
+export function saveExercise(payload) {
+  return firebase.database().ref('workouts').push(payload)
 }
 
