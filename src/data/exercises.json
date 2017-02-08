@@ -50,6 +50,12 @@
         }, {
           "reps": 5,
           "multiplier": 1.0
+        }, {
+          "reps": 5,
+          "multiplier": 1.0
+        }, {
+          "reps": 5,
+          "multiplier": 1.0
         }]
       },
     {
