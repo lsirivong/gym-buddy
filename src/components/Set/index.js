@@ -5,49 +5,35 @@ import Checkbox from 'material-ui/Checkbox'
 import Chip from 'material-ui/Chip'
 import {
   white,
-  blueGrey400,
   blueGrey500,
   blueGrey600,
   blueGrey700,
   blueGrey800,
   blueGrey900
 } from 'material-ui/styles/colors'
+import * as weightCalculator from '../../services/calculator'
 
 import './index.css'
 
-const plateColors = [
-  blueGrey900,
-  blueGrey800,
-  blueGrey700,
-  blueGrey600,
-  blueGrey500,
-  blueGrey400,
-]
+const getPlateColor = weight => {
+  switch (weight) {
+    case 2.5:
+      return blueGrey500
 
-function calculateBarbellWeights(weight, barWeight = 45) {
-  let remainingWeight = (weight - barWeight) / 2;
-  const plates = [45, 35, 25, 10, 5, 2.5]
-    .map((w, i) => ({
-      weight: w,
-      count: 0,
-      color: plateColors[i],
-    }))
+    case 5:
+      return blueGrey600
 
-  let c = 0;
-  const plateIsSmallerThanRemaining = plate => remainingWeight >= plate.weight
+    case 10:
+      return blueGrey700
 
-  while (remainingWeight > 0 && c < 100) {
-    const plate = plates.find(plateIsSmallerThanRemaining);
-    if (plate) {
-      remainingWeight -= plate.weight;
-      plate.count++;
-    }
-    c++;
+    case 25:
+      return blueGrey800
+
+    case 45:
+    default:
+      return blueGrey900
   }
-
-  return plates.filter(p => p.count > 0);
 }
-
 
 class Set extends Component {
   render() {
@@ -63,11 +49,11 @@ class Set extends Component {
         className="Set--plates"
       >
         {
-          calculateBarbellWeights(weight).map(plate => (
+          weightCalculator.weight(weight).map(plate => (
             <Chip
               className="Set--plate"
               key={`${weight}_${plate.weight}`}
-              backgroundColor={plate.color}
+              backgroundColor={getPlateColor(plate.weight)}
               labelColor={white}
             >
               <div className="Set--plate--value">
